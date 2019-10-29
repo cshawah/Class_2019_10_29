@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 
 library(tidyverse)
 library(googlesheets4)
@@ -14,7 +14,7 @@ library(moderndive)
 
 ```
 
-```{r}
+```{r, message=FALSE}
 
 sheets_deauth()
 
@@ -29,11 +29,19 @@ cleaned_sampling <- sampling %>%
   mutate(red_prop = red/(red + white))
 
 ggplot(cleaned_sampling) +
-  geom_histogram(aes(x = red_prop), binwidth = 0.02)
+  geom_histogram(aes(x = red_prop), binwidth = 0.04, color = "white")
 
-bowl <- tibble(id = 1:10, color = c(rep("red", 8), rep("white", 2)))
+bowl <- tibble(id = 1:1000, color = c(rep("red", 200), rep("white", 800)))
 
-#simulation <- rep_sample_n()
+simulation <- rep_sample_n(bowl, size = 25, reps = 100000)
+
+red_props <- simulation %>%
+  group_by(replicate) %>%
+  mutate(is_red = (color == "red")) %>%
+  summarize(red_prop = sum(is_red)/25)
+
+ggplot(red_props, aes(x = red_prop)) +
+  geom_histogram(binwidth = 0.04, color = "white")
 
 ```
 
