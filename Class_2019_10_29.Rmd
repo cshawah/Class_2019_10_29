@@ -7,6 +7,34 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(googlesheets4)
+library(moderndive)
+
+```
+
+```{r}
+
+sheets_deauth()
+
+sampling <- googlesheets4::read_sheet("1cgP-e6THVfiW5TJ95QhX3jkNxKvc8Sicp9k_BkSRd2I")
+train <- read_sheet("1QV7o63fiZdNtMtLQfdwREapf8eYDjpfSRX0dgfNrB8A")
+
+```
+```{r}
+
+cleaned_sampling <- sampling %>% 
+  drop_na() %>% 
+  mutate(red_prop = red/(red + white))
+
+ggplot(cleaned_sampling) +
+  geom_histogram(aes(x = red_prop), binwidth = 0.02)
+
+bowl <- tibble(id = 1:10, color = c(rep("red", 8), rep("white", 2)))
+
+#simulation <- rep_sample_n()
+
 ```
 
 
